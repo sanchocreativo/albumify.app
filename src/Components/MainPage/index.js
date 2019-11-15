@@ -237,9 +237,9 @@ convertSvgToImage = () => {
           URL.revokeObjectURL(this.src);
           ctx.drawImage(this, 0, 0);
           canvas.getContext("2d").drawImage(img, 0, 0);
-          const canvasdata = canvas.toDataURL("image/jpg");
+          const canvasdata = canvas.toDataURL("image/jpeg");
           const a = document.createElement("a");
-          a.download = "album.jpg";
+          a.download = "album.jpeg";
           a.href = canvasdata;
           document.body.appendChild(a);
           a.click();
@@ -259,7 +259,7 @@ convertSvgToImage = () => {
     canvas.height = img.height;
     var ctx = canvas.getContext("2d");
     ctx.drawImage(img, 0, 0);
-    var dataURL = canvas.toDataURL("image/jpg");
+    var dataURL = canvas.toDataURL("image/jpeg");
     return dataURL;
   }
 
