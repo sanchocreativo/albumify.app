@@ -32,7 +32,7 @@ p a:hover{
 }
 
 .form-control:focus {
-  border-color: #666;
+  border-color: #666666;
 }
 .form-control {
 display: inline-block;
