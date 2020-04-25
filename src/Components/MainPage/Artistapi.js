@@ -7,24 +7,24 @@ import React, { Component } from 'react';
   export class Artistapi2 extends Component {
 
     state = {
-      activeRecipe: []
+      activeAlbum: []
     }
   
     componentDidMount = async () => {
       // const title = this.props.location.state.albumapi;
       const req = await fetch(`http://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=cher&api_key=afcfad19fac36b2d66cf2f17e37f66ed&format=json`);
       const res = await req.json();
-      this.setState({ activeRecipe: res.topalbums.album });
-      console.log(this.state.activeRecipe);
+      this.setState({ activeAlbum: res.topalbums.album });
+      console.log(this.state.activeAlbum);
     }
 
     render() {
 
       return (
-        this.state.activeRecipe.map((albumimage) => {
+        this.state.activeAlbum.map((albumimage) => {
           return (
             <React.Fragment>
-                { this.state.activeRecipe.length !== 0 &&
+                { this.state.activeAlbum.length !== 0 &&
                      <img src={albumimage.image[2]['#text']} className="w-50" alt={albumimage.name} key={albumimage.mbid} /> 
                 }
             </React.Fragment>

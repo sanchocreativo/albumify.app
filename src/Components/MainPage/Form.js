@@ -4,46 +4,44 @@ class Form extends React.Component {
 
     constructor(props) {
       super(props);
-      this.state = {value: 'Queen'};
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleInput(event) {
-      this.refs.someName.value = '';
+      this.refs.someName.formValue = '';
       event.preventDefault();
-
     }
 
 
      handleChange(event) {
-      this.setState({value: event.target.value});
+      
+      this.setState({formValue: event.target.formValue});
     }
 
     handleSubmit(event) {
-      alert(this.state.value);
+      alert(this.props.formValue);
       event.preventDefault();
     }
 
 
     render() {
       return (
-      <React.Fragment>
-        <form onSubmit={this.props.getRecipe} className="fixed-form" style={{ marginBottom:"2rem" }}>
-
+      <>
+          <form onSubmit={this.props.getAlbums} className="fixed-form" style={{ marginBottom:"2rem" }}>
           <label htmlFor="artistsearch" className="ml-2">Search your Artist</label>
-
           <input className="form__input w-100" type="text"  
-          value={this.state.value}  
+          formValue={this.props.formValue}  
+          placeholder={this.props.formValue}
           onChange={this.handleChange} 
           onClick={this.handleInput.bind(this)} 
           ref="someName"
-          name="recipeName"
+          name="albumName"
           id="artistsearch"
           />
 
         </form>
-      </React.Fragment>
+      </>
     );
   }
 

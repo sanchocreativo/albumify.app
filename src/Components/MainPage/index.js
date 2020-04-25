@@ -16,26 +16,24 @@ const initialState = {
 
 class MainPage extends React.Component {
 
-  getRecipe = async (e) => {
+  getAlbums = async (e) => {
     e.preventDefault();
-    const recipeName = e.target.elements.recipeName.value;
-    const req = await fetch(`https://cors-anywhere.herokuapp.com/https://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=${recipeName}&api_key=afcfad19fac36b2d66cf2f17e37f66ed&format=json`);
+    const albumName = e.target.elements.albumName.value;
+    const req = await fetch(`https://cors-anywhere.herokuapp.com/https://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=${albumName}&api_key=afcfad19fac36b2d66cf2f17e37f66ed&format=json`);
     const res = await req.json();
-    this.setState({ activeRecipe: res.topalbums.album });
-    console.log(this.state.activeRecipe)
+    this.setState({ activeAlbum: res.topalbums.album });
+    console.log(this.state.activeAlbum)
   }
 
   componentDidMount = () => {
-    const json = localStorage.getItem("activeRecipe");
-    const activeRecipe = JSON.parse(json);
-    this.setState({ activeRecipe });
+    const json = localStorage.getItem("activeAlbum");
+    const activeAlbum = JSON.parse(json);
+    this.setState({ activeAlbum });
   }
   componentDidUpdate = () => {
-    const activeRecipe = JSON.stringify(this.state.activeRecipe);
-    localStorage.setItem("activeRecipe", activeRecipe);
+    const activeAlbum = JSON.stringify(this.state.activeAlbum);
+    localStorage.setItem("activeAlbum", activeAlbum);
   }
-
-
 
   constructor(props) {
     super(props);
@@ -43,13 +41,16 @@ class MainPage extends React.Component {
     this.state = {
       fontSizefront: 38,
       fontSizeback: 38,
-      getRecipe: "",
-      activeRecipe: [],
+      getAlbums: "",
+      activeAlbum: [],
       currentImage: 0,
       modalIsOpen: false,
       currentImagebase64: null,
+      formValue: 'Queen',
       ...initialState
     };
+    this.convertSvgToImage = this.convertSvgToImage.bind(this.state.formValue)
+
   }
 
   incrementScore = (e) => {
@@ -78,7 +79,7 @@ class MainPage extends React.Component {
   }
 
   openImage = (index) => {
-    const image = this.state.activeRecipe[index];
+    const image = this.state.activeAlbum[index];
     const base_image = new Image();
     base_image.setAttribute('crossOrigin', 'anonymous');
     base_image.src = image.image[3]['#text'];
@@ -159,7 +160,7 @@ class MainPage extends React.Component {
  
 convertSvgToImage = () => {
 
-  function GFontToDataURI(url) {
+  const GFontToDataURI = (url) => {
     return fetch(url) 
       .then(resp => resp.text()) 
       .then(text => {
@@ -232,14 +233,13 @@ convertSvgToImage = () => {
         let str = new XMLSerializer().serializeToString(svgDoc.documentElement);
         let uri = 'data:image/svg+xml;charset=utf8,' + encodeURIComponent(str);
 
-
-        img.onload = function(e) {
+         img.onload = function(e) {
           URL.revokeObjectURL(this.src);
           ctx.drawImage(this, 0, 0);
           canvas.getContext("2d").drawImage(img, 0, 0);
           const canvasdata = canvas.toDataURL("image/jpeg");
           const a = document.createElement("a");
-          a.download = "album.jpeg";
+          a.download = `album.jpg`;
           a.href = canvasdata;
           document.body.appendChild(a);
           a.click();
@@ -264,7 +264,7 @@ convertSvgToImage = () => {
   }
 
   render() {
-    const image = this.state.activeRecipe;
+    const image = this.state.activeAlbum;
     const base_image = new Image();
     base_image.crossOrigin = "anonymous";  // This enables CORS
     base_image.src = image;
@@ -280,7 +280,6 @@ convertSvgToImage = () => {
       fontWeight:600
     }
 
-   
 
     return (
       <React.Fragment>
@@ -293,7 +292,7 @@ convertSvgToImage = () => {
             </p>
         
             <p className="text-center d-block">
-              <a className=" mt-0 "  target="_blank" href={'mailto:hi@santih.me'} > Contact the creator</a>
+              <a className=" mt-0 " target="_blank" href={'mailto:hi@santih.me'} > Contact the creator</a>
             </p>
             <div className="row mt-auto text-center">
               <p>
@@ -303,15 +302,15 @@ convertSvgToImage = () => {
 
           </div>
 
-
-
           <div className="meme-gen-modal mx-auto w-100" >
-          <Form getRecipe={this.getRecipe.bind(this)}/> 
+          <Form 
+            getAlbums={this.getAlbums.bind(this)}
+            formValue={this.state.formValue}
+          /> 
 
           <h2 className="my-4">
             Choose an Album and Go!
           </h2>
-
 
           <div className="pedidosya">
               <svg 
@@ -392,12 +391,12 @@ convertSvgToImage = () => {
           <div className="content">
             
               
-              {  this.state.activeRecipe &&  this.state.activeRecipe.map((image, index) => (
+              {  this.state.activeAlbum &&  this.state.activeAlbum.map((image, index) => (
 
               <div className="image-holder" onClick={this.onClick} key={index.src} 
               >
           
-                { this.state.activeRecipe.length !== 0 &&
+                { this.state.activeAlbum.length !== 0 &&
                 <img      
                 style={{
                   width: "100%",
