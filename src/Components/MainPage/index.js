@@ -19,7 +19,7 @@ class MainPage extends React.Component {
   getAlbums = async (e) => {
     e.preventDefault();
     const albumName = e.target.elements.albumName.value;
-    const req = await fetch(`https://cors-anywhere.herokuapp.com/https://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=${albumName}&api_key=afcfad19fac36b2d66cf2f17e37f66ed&format=json`);
+    const req = await fetch(`https://cors-anywhere.herokuapp.com/https://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=${albumName}&api_key=afcfad19fac36b2d66cf2f17e37f66ed&format=json&limit=10`);
     const res = await req.json();
     this.setState({ activeAlbum: res.topalbums.album });
     console.log(this.state.activeAlbum)
