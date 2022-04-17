@@ -1,0 +1,15 @@
+{
+  "main.css": "/albumify.app/static/css/main.b3e2f0c4.chunk.css",
+  "main.js": "/albumify.app/static/js/main.9f637850.chunk.js",
+  "main.js.map": "/albumify.app/static/js/main.9f637850.chunk.js.map",
+  "static/css/1.95bf5611.chunk.css": "/albumify.app/static/css/1.95bf5611.chunk.css",
+  "static/js/1.f0bd717f.chunk.js": "/albumify.app/static/js/1.f0bd717f.chunk.js",
+  "static/js/1.f0bd717f.chunk.js.map": "/albumify.app/static/js/1.f0bd717f.chunk.js.map",
+  "runtime~main.js": "/albumify.app/static/js/runtime~main.b1531b79.js",
+  "runtime~main.js.map": "/albumify.app/static/js/runtime~main.b1531b79.js.map",
+  "static/css/1.95bf5611.chunk.css.map": "/albumify.app/static/css/1.95bf5611.chunk.css.map",
+  "static/css/main.b3e2f0c4.chunk.css.map": "/albumify.app/static/css/main.b3e2f0c4.chunk.css.map",
+  "index.html": "/albumify.app/index.html",
+  "precache-manifest.fefe2e42162c120b77fa715df69d5908.js": "/albumify.app/precache-manifest.fefe2e42162c120b77fa715df69d5908.js",
+  "service-worker.js": "/albumify.app/service-worker.js"
+}
