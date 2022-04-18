@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "9f6378502d4b0f4cc7b1",
+    "revision": "6815189cabc03a608a86",
     "url": "/albumify.app/static/css/main.b3e2f0c4.chunk.css"
   },
   {
-    "revision": "9f6378502d4b0f4cc7b1",
-    "url": "/albumify.app/static/js/main.9f637850.chunk.js"
+    "revision": "6815189cabc03a608a86",
+    "url": "/albumify.app/static/js/main.6815189c.chunk.js"
   },
   {
     "revision": "f0bd717f13db6005f25e",
@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "/albumify.app/static/js/runtime~main.b1531b79.js"
   },
   {
-    "revision": "6e2344e20e9c2a8589a3741d254d5597",
+    "revision": "75bcd8243827b68a0d2b016d253e3da6",
     "url": "/albumify.app/index.html"
   }
 ];
