@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, createRef} from 'react';
 import { FormGroup, Label, NavbarBrand } from 'reactstrap';
 import MyReactComponent from './svg';
 import Form from './Form';
@@ -13,13 +13,13 @@ function MainPage(props) {
       albumName = e.target.elements.albumName.value
     }
 
-    const req = await fetch(`https://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=${albumName ? albumName : formValue}&api_key=afcfad19fac36b2d66cf2f17e37f66ed&format=json&limit=10`);
+    const req = await fetch(`https://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=${albumName ? albumName : formValue}&api_key=afcfad19fac36b2d66cf2f17e37f66ed&format=json&limit=20`);
     const res = await req.json();
     setActiveAlbum(res.topalbums.album);
   }
   const imageRef = useRef();
   const svgRef = useRef();
-  const MyReactComponent2 = useRef();
+  const MyReactComponent2 = createRef();
   const [toptext, setTopText] = useState("Queen");
   const [bottomtext, setBottomText] = useState("Best Hits");
   const [isTopDragging, setIsTopDragging] = useState(false);
@@ -38,24 +38,24 @@ function MainPage(props) {
 
   useEffect(() => {
     getAlbums(null);
-    const json = localStorage.getItem("activeAlbum");
-    const activeAlbum = JSON.parse(json);
-    setActiveAlbum(activeAlbum)
+
   }, []);
 
   useEffect(() => {
     setcurrentImagebase64(dataUrl);
   }, [dataUrl]);
 
-  // useEffect(() => {
-  //   const activeAlbum = JSON.stringify(activeAlbum);
-  //   localStorage.setItem("activeAlbum", activeAlbum);
-  // }, [activeAlbum]);
+ useEffect(() => {
+    openImage(0)
+ }, [JSON.stringify(activeAlbum)]);
+
+//  useEffect(() => {
+//   createBarChart();
+// }, [MyReactComponent2.current]);
 
 
   const incrementScore = (e) => {
     setFontSizefront( fontSizefront + 2 );
-
   }
 
   const decrementScore = (e) => {
@@ -72,20 +72,23 @@ function MainPage(props) {
 
 
   const createBarChart = () => {
-    MyReactComponent.createBarChart();
+    if(MyReactComponent2.current){
+      MyReactComponent2.current.createBarChart();
+    }
   }
 
   const openImage = (index) => {
-    const image = activeAlbum[index];
-    const base_image = new Image();
-    base_image.setAttribute('crossOrigin', 'anonymous');
-    base_image.src = image.image[3]['#text'];
-    
-    base_image.onload = function() {
-       setDataUrl(getBase64Image(base_image));
+    if(activeAlbum && activeAlbum.length){
+      const image = activeAlbum[index];
+      const base_image = new Image();
+      base_image.setAttribute('crossOrigin', 'anonymous');
+      base_image.src = image.image[3]['#text'];
+      
+      base_image.onload = function() {
+        setDataUrl(getBase64Image(base_image));
+      }
+      setModalIsOpen(!modalIsOpen);
     }
-    setModalIsOpen(!modalIsOpen);
-    
   }
 
 
@@ -98,69 +101,36 @@ function MainPage(props) {
   }
 
   const getStateObj = (e, type) => {
-    let rect = imageRef.getBoundingClientRect();
+    let rect = imageRef.current.getBoundingClientRect();
     const xOffset = e.clientX - rect.left + 20;
     const yOffset = e.clientY - rect.top + 40;
-    let stateObj = {};
     if (type === "bottom") {
-      stateObj = {
-        isBottomDragging: true,
-        isTopDragging: false,
-        bottomX: `${xOffset}px`,
-        bottomY: `${yOffset}px`
-      }
+      setIsBottomDragging(true);
+      setIsTopDragging(false)
+      setBottomX(`${xOffset}px`)
+      setBottomY(`${yOffset}px`)
     } else if (type === "top") {
-      stateObj = {
-        isTopDragging: true,
-        isBottomDragging: false,
-        topX: `${xOffset}px`,
-        topY: `${yOffset}px`
-      }
+      setIsBottomDragging(false);
+      setIsTopDragging(true)
+      setTopX(`${xOffset}px`)
+      setTopY(`${yOffset}px`)
     }
-    return stateObj;
   }
 
 
-  const switchMovements = (stateObj) => {
-    switch (stateObj) {
-      case isBottomDragging:
-        setIsBottomDragging(isBottomDragging)
-        break;
-      case isTopDragging:
-        setIsTopDragging(isTopDragging)
-        break;
-      case topX:
-        setTopX(topX)
-        break;
-      case topY:
-        setTopY(topY)
-        break;
-      case bottomX:
-        setBottomX(bottomX)
-        break;
-      case bottomY:
-        setBottomY(bottomY)
-        break;
-      default:
-        break;
-    }
-  }
   const handleMouseDown = (e, type) => {
-    const stateObj = getStateObj(e, type);
+    getStateObj(e, type);
     document.addEventListener('mousemove', (event) => handleMouseMove(event, type));
-    switchMovements(stateObj)
-
   }
 
   const handleMouseMove = (e, type) => {
     if (isTopDragging || isBottomDragging) {
-      let stateObj = {};
+      // let stateObj = {};
       if (type === "bottom" && isBottomDragging) {
-        stateObj = this.getStateObj(e, type);
+        getStateObj(e, type);
       } else if (type === "top" && isTopDragging) {
-        stateObj = this.getStateObj(e, type);
+        getStateObj(e, type);
       }
-      switchMovements(stateObj)
     }
   };
 
@@ -171,7 +141,7 @@ function MainPage(props) {
   }
 
 
-  const convertSvgToImage = () => {
+  const convertSvgToImage = (text) => {
 
     const GFontToDataURI = (url) => {
       return fetch(url)
@@ -224,11 +194,12 @@ function MainPage(props) {
         });
     }
 
-    const svg = svgRef;
+    const svg = svgRef.current;
     let svgData = new XMLSerializer().serializeToString(svg);
     const canvas = document.createElement("canvas");
     canvas.setAttribute("id", "canvas");
     const ctx = canvas.getContext('2d');
+
     const svgSize = svg.getBoundingClientRect();
     canvas.width = svgSize.width;
     canvas.height = svgSize.height;
@@ -252,7 +223,7 @@ function MainPage(props) {
           canvas.getContext("2d").drawImage(img, 0, 0);
           const canvasdata = canvas.toDataURL("image/jpeg");
           const a = document.createElement("a");
-          a.download = `album.jpg`;
+          a.download = `${text}.jpg`;
           a.href = canvasdata;
           document.body.appendChild(a);
           a.click();
@@ -337,7 +308,7 @@ function MainPage(props) {
               >
 
                 <foreignObject x={0} y={0} width={newWidth} height={newHeight} >
-                  <MyReactComponent onRef={() => MyReactComponent2} />
+                  <MyReactComponent ref={MyReactComponent2} />
                 </foreignObject>
 
                 <image
@@ -395,7 +366,7 @@ function MainPage(props) {
 
 
                 </FormGroup>
-                <button onClick={() => convertSvgToImage()} className="btn btn-success mt-3 w-100">Download Album Cover!</button>
+                <button onClick={() => convertSvgToImage(`${toptext}-${bottomtext}`)} className="btn btn-success mt-3 w-100">Download Album Cover!</button>
               </div>
             </div>
 
@@ -403,7 +374,7 @@ function MainPage(props) {
 
           <div className="content">
             {activeAlbum && activeAlbum.map((image, index) => (
-              <div className="image-holder" onClick={() => createBarChart} key={`${index}`}
+              <div className="image-holder" onClick={createBarChart()} key={`${index}`}
               >
                 {activeAlbum.length !== 0 &&
                   <img
