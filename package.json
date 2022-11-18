@@ -15,7 +15,7 @@
     "react-dom": "^16.14.0",
     "react-faux-dom": "^4.5.0",
     "react-paypal-express-checkout": "^1.0.5",
-    "react-scripts": "^2.1.1",
+    "react-scripts": "^5.0.1",
     "reactstrap": "^6.5.0"
   },
   "scripts": {
